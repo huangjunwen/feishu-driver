@@ -52,14 +52,14 @@ func NewHandler(cnf fsdconf.WebhookConfig, payloadHandler PayloadHandler) http.H
 	}
 
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		invalidPayload := func(code int) {
-			http.Error(w, "Invalid payload", code)
-		}
-
 		body, err := ioutil.ReadAll(r.Body)
 		if err != nil {
-			invalidPayload(460)
+			http.Error(w, err.Error(), 500)
 			return
+		}
+
+		invalidPayload := func(code int) {
+			http.Error(w, "Invalid payload", code)
 		}
 
 		// 加密模式
