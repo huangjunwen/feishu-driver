@@ -14,17 +14,18 @@ type defaultWebhookConfig struct {
 	encryptKey string
 }
 
+// NewWebhookConfig 创建一个 WebhookConfig
+func NewWebhookConfig(verifToken, encryptKey string) WebhookConfig {
+	return &defaultWebhookConfig{
+		verifToken: verifToken,
+		encryptKey: encryptKey,
+	}
+}
+
 func (cnf *defaultWebhookConfig) FeishuWebhookVerifToken() string {
 	return cnf.verifToken
 }
 
 func (cnf *defaultWebhookConfig) FeishuWebhookEncryptKey() string {
 	return cnf.encryptKey
-}
-
-func NewDefaultWebhookConfig(verifToken, encryptKey string) WebhookConfig {
-	return &defaultWebhookConfig{
-		verifToken: verifToken,
-		encryptKey: encryptKey,
-	}
 }

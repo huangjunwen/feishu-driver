@@ -26,6 +26,7 @@ func PostJSON(ctx context.Context, urlPath string, body interface{}, result inte
 	if err != nil {
 		return err
 	}
+	req.Header.Set("Content-Type", "application/json")
 
 	resp, err := opts.Client.Do(req)
 	if err != nil {

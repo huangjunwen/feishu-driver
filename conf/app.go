@@ -14,17 +14,18 @@ type defaultAppConfig struct {
 	appSecret string
 }
 
+// NewAppConfig 创建一个 AppConfig
+func NewAppConfig(appId, appSecret string) AppConfig {
+	return &defaultAppConfig{
+		appId:     appId,
+		appSecret: appSecret,
+	}
+}
+
 func (cnf *defaultAppConfig) FeishuAppId() string {
 	return cnf.appId
 }
 
 func (cnf *defaultAppConfig) FeishuAppSecret() string {
 	return cnf.appSecret
-}
-
-func NewDefaultAppConfig(appId, appSecret string) AppConfig {
-	return &defaultAppConfig{
-		appId:     appId,
-		appSecret: appSecret,
-	}
 }
