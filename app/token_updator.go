@@ -43,7 +43,7 @@ func (updator *tokenUpdator) Start() error {
 	}
 
 	updator.timer = time.NewTimer(time.Hour)
-	updator.stopTimer()
+	updator.timer.Stop()
 
 	return updator.update("", time.Now())
 }
@@ -57,7 +57,7 @@ func (updator *tokenUpdator) Stop() {
 		return
 	}
 
-	updator.stopTimer()
+	updator.timer.Stop()
 	updator.timer = nil
 }
 
@@ -70,7 +70,7 @@ func (updator *tokenUpdator) update(currToken string, currExpire time.Time) (err
 		updator.logger.Info("Token update but stopped", "updator", updator.name)
 		return nil
 	}
-	updator.stopTimer()
+	updator.timer.Stop()
 
 	// 有错误时（包括调接口错误，更新回调错误等），均在 retryInterval 后重试，
 	// 否则在 updateInterval 后重试
@@ -108,10 +108,4 @@ func (updator *tokenUpdator) update(currToken string, currExpire time.Time) (err
 
 	// 回调
 	return updator.onUpdate(currToken)
-}
-
-func (updator *tokenUpdator) stopTimer() {
-	if !updator.timer.Stop() {
-		<-updator.timer.C
-	}
 }
