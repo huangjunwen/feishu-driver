@@ -27,7 +27,7 @@ type PublicApp struct {
 	appAccessTokenUpdator tokenUpdator
 }
 
-// NewPublicApp 创建 PublicApp 并开启自动更新
+// NewPublicApp 创建 PublicApp 并开启自动更新, 它也会触发一次 app ticket resend
 func NewPublicApp(cnf conf.AppConfig, ticketProvider conf.AppTicketProvider, opts ...PublicAppOption) (*PublicApp, error) {
 	a := &PublicApp{
 		appConfig:      cnf,
@@ -49,6 +49,9 @@ func NewPublicApp(cnf conf.AppConfig, ticketProvider conf.AppTicketProvider, opt
 	}
 
 	a.appAccessTokenUpdator.Start()
+
+	// 触发一次 app ticket resend
+	go authz.ResendAppTicket(a.ctx, a.appConfig)
 	return a, nil
 }
 
