@@ -11,10 +11,10 @@ import (
 // Send 发送消息
 type Send struct {
 	// 给用户发私聊消息，只需要填 open_id、email、user_id 中的一个即可，向群里发消息使用群的 chat_id
-	OpenId string `json"open_id,omitempty"`
-	UserId string `json"user_id,omitempty"`
-	Email  string `json"email,omitempty"`
-	ChatId string `json"chat_id,omitempty"`
+	OpenId string `json:"open_id,omitempty"`
+	UserId string `json:"user_id,omitempty"`
+	Email  string `json:"email,omitempty"`
+	ChatId string `json:"chat_id,omitempty"`
 
 	// RootId 是回复某条消息对应消息的消息 ID
 	RootId string `json:"root_id,omitempty"`
