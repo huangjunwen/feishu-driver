@@ -17,11 +17,11 @@ func Regist(regist func(string, func() interface{})) {
 	regist("user_status_change", func() interface{} { return new(UserStatusChange) })
 	regist("contact_scope_change", func() interface{} { return new(ContactScopeChange) })
 	// bot and msg 机器人和消息会话事件
-	regist("add_bot", func() interface{} { return new(EvAddBot) })
-	regist("remove_bot", func() interface{} { return new(EvRemoveBot) })
-	regist("p2p_chat_create", func() interface{} { return new(EvP2pChatCreate) })
-	regist("message", func() interface{} { return new(EvMessage) })
-	regist("message_read", func() interface{} { return new(EvMessageRead) })
+	regist("add_bot", func() interface{} { return new(AddBot) })
+	regist("remove_bot", func() interface{} { return new(RemoveBot) })
+	regist("p2p_chat_create", func() interface{} { return new(P2pChatCreate) })
+	regist("message", func() interface{} { return new(Message) })
+	regist("message_read", func() interface{} { return new(MessageRead) })
 	// unsupported
-	regist("", func() interface{} { return new(EvUnsupported) })
+	regist("", func() interface{} { return new(Unsupported) })
 }

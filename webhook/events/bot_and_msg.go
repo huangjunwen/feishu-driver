@@ -1,7 +1,7 @@
 package events
 
-// EvAddBot 机器人进群 https://open.feishu.cn/document/ukTMukTMukTM/uMTNxYjLzUTM24yM1EjN#%E6%9C%BA%E5%99%A8%E4%BA%BA%E8%BF%9B%E7%BE%A4
-type EvAddBot struct {
+// AddBot 机器人进群 https://open.feishu.cn/document/ukTMukTMukTM/uMTNxYjLzUTM24yM1EjN#%E6%9C%BA%E5%99%A8%E4%BA%BA%E8%BF%9B%E7%BE%A4
+type AddBot struct {
 	AppId               string            `json:"app_id"`
 	TenantKey           string            `json:"tenant_key"`
 	ChatI18nNames       map[string]string `json:"chat_i18n_names"`
@@ -16,8 +16,8 @@ type EvAddBot struct {
 	OwnerIsBot          bool              `json:"owner_is_bot"`
 }
 
-// EvRemoveBot 机器人被移出群 https://open.feishu.cn/document/ukTMukTMukTM/uMTNxYjLzUTM24yM1EjN#%E6%9C%BA%E5%99%A8%E4%BA%BA%E8%A2%AB%E7%A7%BB%E5%87%BA%E7%BE%A4
-type EvRemoveBot struct {
+// RemoveBot 机器人被移出群 https://open.feishu.cn/document/ukTMukTMukTM/uMTNxYjLzUTM24yM1EjN#%E6%9C%BA%E5%99%A8%E4%BA%BA%E8%A2%AB%E7%A7%BB%E5%87%BA%E7%BE%A4
+type RemoveBot struct {
 	AppId               string            `json:"app_id"`
 	TenantKey           string            `json:"tenant_key"`
 	ChatI18nNames       map[string]string `json:"chat_i18n_names"`
@@ -32,8 +32,8 @@ type EvRemoveBot struct {
 	OwnerIsBot          bool              `json:"owner_is_bot"`
 }
 
-// EvP2pChatCreate 用户和机器人的会话首次被创建 https://open.feishu.cn/document/ukTMukTMukTM/uMTNxYjLzUTM24yM1EjN#%E7%94%A8%E6%88%B7%E5%92%8C%E6%9C%BA%E5%99%A8%E4%BA%BA%E7%9A%84%E4%BC%9A%E8%AF%9D%E9%A6%96%E6%AC%A1%E8%A2%AB%E5%88%9B%E5%BB%BA
-type EvP2pChatCreate struct {
+// P2pChatCreate 用户和机器人的会话首次被创建 https://open.feishu.cn/document/ukTMukTMukTM/uMTNxYjLzUTM24yM1EjN#%E7%94%A8%E6%88%B7%E5%92%8C%E6%9C%BA%E5%99%A8%E4%BA%BA%E7%9A%84%E4%BC%9A%E8%AF%9D%E9%A6%96%E6%AC%A1%E8%A2%AB%E5%88%9B%E5%BB%BA
+type P2pChatCreate struct {
 	AppId     string `json:"app_id"`
 	TenantKey string `json:"tenant_key"`
 	ChatId    string `json:"chat_id"`
@@ -48,8 +48,8 @@ type EvP2pChatCreate struct {
 	} `json:"user"`
 }
 
-// EvMessage 接收消息 https://open.feishu.cn/document/ukTMukTMukTM/uMTNxYjLzUTM24yM1EjN#%E6%8E%A5%E6%94%B6%E6%B6%88%E6%81%AF
-type EvMessage struct {
+// Message 接收消息 https://open.feishu.cn/document/ukTMukTMukTM/uMTNxYjLzUTM24yM1EjN#%E6%8E%A5%E6%94%B6%E6%B6%88%E6%81%AF
+type Message struct {
 	AppId            string   `json:"app_id"`
 	TenantKey        string   `json:"tenant_key"`
 	RootId           string   `json:root_id`
@@ -70,8 +70,8 @@ type EvMessage struct {
 	FileKey          string   `json:"file_key"`
 }
 
-// EvMessageRead 消息已读 https://open.feishu.cn/document/ukTMukTMukTM/uMTNxYjLzUTM24yM1EjN#%E6%B6%88%E6%81%AF%E5%B7%B2%E8%AF%BB
-type EvMessageRead struct {
+// MessageRead 消息已读 https://open.feishu.cn/document/ukTMukTMukTM/uMTNxYjLzUTM24yM1EjN#%E6%B6%88%E6%81%AF%E5%B7%B2%E8%AF%BB
+type MessageRead struct {
 	AppId          string   `json:"app_id"`
 	TenantKey      string   `json:"tenant_key"`
 	OpenChatId     string   `json:"open_chat_id"`
