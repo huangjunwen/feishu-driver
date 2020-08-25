@@ -48,9 +48,7 @@ func NewPublicApp(cnf conf.AppConfig, ticketProvider conf.AppTicketProvider, opt
 		}
 	}
 
-	if err := a.appAccessTokenUpdator.Start(); err != nil {
-		return nil, err
-	}
+	a.appAccessTokenUpdator.Start()
 	return a, nil
 }
 

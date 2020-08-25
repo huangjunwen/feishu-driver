@@ -56,14 +56,8 @@ func NewInternalApp(cnf conf.AppConfig, opts ...InternalAppOption) (*InternalApp
 		}
 	}
 
-	if err := a.appAccessTokenUpdator.Start(); err != nil {
-		return nil, err
-	}
-	if err := a.tenantAccessTokenUpdator.Start(); err != nil {
-		a.appAccessTokenUpdator.Stop()
-		return nil, err
-	}
-
+	a.appAccessTokenUpdator.Start()
+	a.tenantAccessTokenUpdator.Start()
 	return a, nil
 }
 

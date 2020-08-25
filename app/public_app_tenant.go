@@ -49,9 +49,7 @@ func NewPublicAppTenant(appAccessTokenProvider conf.AppAccessTokenProvider, tena
 		}
 	}
 
-	if err := t.tenantAccessTokenUpdator.Start(); err != nil {
-		return nil, err
-	}
+	t.tenantAccessTokenUpdator.Start()
 	return t, nil
 }
 

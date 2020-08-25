@@ -1,8 +1,8 @@
 package app
 
 import (
-	"errors"
 	"fmt"
+	"sync"
 	"sync/atomic"
 	"time"
 
@@ -18,14 +18,13 @@ type tokenUpdator struct {
 	retryInterval  time.Duration
 	logger         logr.Logger
 
-	token   atomic.Value // string, nil 表示未有 token
-	stopped atomic.Value // bool, nil 表示未 stopped
+	token atomic.Value // string, nil 表示未有 token
+
+	mu    sync.Mutex
+	timer *time.Timer // nil 表示未启动（停止），非 nil （即使 timer 停止）表示已经启动
 }
 
-func (updator *tokenUpdator) Start() error {
-	return updator.update(true, "", time.Now())
-}
-
+// Get 获得当前已知最新的 token，无论处于停止还是启动状态
 func (updator *tokenUpdator) Get() (string, error) {
 	v := updator.token.Load()
 	if v == nil {
@@ -34,33 +33,59 @@ func (updator *tokenUpdator) Get() (string, error) {
 	return v.(string), nil
 }
 
-// NOTE: Stop 会等到下一次调用 update 时才起作用
-func (updator *tokenUpdator) Stop() {
-	updator.stopped.Store(true)
+// Start 启动已经停止了的 updator，如果已经启动了则 nop
+func (updator *tokenUpdator) Start() error {
+	updator.mu.Lock()
+	defer updator.mu.Unlock()
+
+	if updator.timer != nil {
+		return nil
+	}
+
+	updator.timer = time.NewTimer(time.Hour)
+	updator.stopTimer()
+
+	return updator.update("", time.Now())
 }
 
-func (updator *tokenUpdator) update(atStart bool, currToken string, currExpire time.Time) (err error) {
+// Stop 停止已经启动了的 updator，如果已经停止了则 nop
+func (updator *tokenUpdator) Stop() {
+	updator.mu.Lock()
+	defer updator.mu.Unlock()
 
-	if v := updator.stopped.Load(); v != nil && v.(bool) {
-		return errors.New("Updator stopped")
+	if updator.timer == nil {
+		return
 	}
+
+	updator.stopTimer()
+	updator.timer = nil
+}
+
+// NOTE: 该函数必须由 mutex 包裹
+func (updator *tokenUpdator) update(currToken string, currExpire time.Time) (err error) {
+
+	if updator.timer == nil {
+		// 已经停止了，则直接返回, 这是有可能的（虽然可能性比较微小）:
+		// 在计时器触发 update 时刚好 Stop 了
+		updator.logger.Info("Token update but stopped", "updator", updator.name)
+		return nil
+	}
+	updator.stopTimer()
 
 	// 有错误时（包括调接口错误，更新回调错误等），均在 retryInterval 后重试，
 	// 否则在 updateInterval 后重试
 	defer func() {
 		var interval time.Duration
 		if err != nil {
-			if atStart {
-				// 如果是在 Start 中调用（第一次），不触发计时器
-				return
-			}
 			interval = updator.retryInterval
 			updator.logger.Error(err, "Token update error", "updator", updator.name)
 		} else {
 			interval = updator.updateInterval
 		}
-		time.AfterFunc(interval, func() {
-			updator.update(false, currToken, currExpire)
+		updator.timer = time.AfterFunc(interval, func() {
+			updator.mu.Lock()
+			defer updator.mu.Unlock()
+			updator.update(currToken, currExpire)
 		})
 	}()
 
@@ -83,4 +108,10 @@ func (updator *tokenUpdator) update(atStart bool, currToken string, currExpire t
 
 	// 回调
 	return updator.onUpdate(currToken)
+}
+
+func (updator *tokenUpdator) stopTimer() {
+	if !updator.timer.Stop() {
+		<-updator.timer.C
+	}
 }
