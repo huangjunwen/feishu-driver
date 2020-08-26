@@ -77,7 +77,9 @@ func New(cnf conf.WebhookConfig, handler PayloadHandler) *Handler {
 	}
 
 	if handler == nil {
-		handler = func(w http.ResponseWriter, r *http.Request, payload *Payload) {}
+		handler = func(w http.ResponseWriter, r *http.Request, payload *Payload) {
+			w.Write([]byte("ok"))
+		}
 	}
 
 	return &Handler{
