@@ -9,23 +9,26 @@ type WebhookConfig interface {
 	FeishuWebhookEncryptKey() string
 }
 
-type defaultWebhookConfig struct {
-	verifToken string
-	encryptKey string
+// DefaultAppConfig 是默认的事件订阅配置
+type DefaultWebhookConfig struct {
+	VerifToken string `json:"verifToken"`
+	EncryptKey string `json:"encryptKey"`
 }
 
 // NewWebhookConfig 创建一个 WebhookConfig
 func NewWebhookConfig(verifToken, encryptKey string) WebhookConfig {
-	return &defaultWebhookConfig{
-		verifToken: verifToken,
-		encryptKey: encryptKey,
+	return &DefaultWebhookConfig{
+		VerifToken: verifToken,
+		EncryptKey: encryptKey,
 	}
 }
 
-func (cnf *defaultWebhookConfig) FeishuWebhookVerifToken() string {
-	return cnf.verifToken
+// FeishuWebhookVerifToken 满足 WebhookConfig 接口
+func (cnf *DefaultWebhookConfig) FeishuWebhookVerifToken() string {
+	return cnf.VerifToken
 }
 
-func (cnf *defaultWebhookConfig) FeishuWebhookEncryptKey() string {
-	return cnf.encryptKey
+// FeishuWebhookEncryptKey 满足 WebhookConfig 接口
+func (cnf *DefaultWebhookConfig) FeishuWebhookEncryptKey() string {
+	return cnf.EncryptKey
 }

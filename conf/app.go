@@ -9,23 +9,26 @@ type AppConfig interface {
 	FeishuAppSecret() string
 }
 
-type defaultAppConfig struct {
-	appId     string
-	appSecret string
+// DefaultAppConfig 是默认应用配置
+type DefaultAppConfig struct {
+	AppId     string `json:"appId"`
+	AppSecret string `json:"appSecret"`
 }
 
 // NewAppConfig 创建一个 AppConfig
 func NewAppConfig(appId, appSecret string) AppConfig {
-	return &defaultAppConfig{
-		appId:     appId,
-		appSecret: appSecret,
+	return &DefaultAppConfig{
+		AppId:     appId,
+		AppSecret: appSecret,
 	}
 }
 
-func (cnf *defaultAppConfig) FeishuAppId() string {
-	return cnf.appId
+// FeishuAppId 满足 AppConfig 接口
+func (cnf *DefaultAppConfig) FeishuAppId() string {
+	return cnf.AppId
 }
 
-func (cnf *defaultAppConfig) FeishuAppSecret() string {
-	return cnf.appSecret
+// FeishuAppSecret 满足 AppConfig 接口
+func (cnf *DefaultAppConfig) FeishuAppSecret() string {
+	return cnf.AppSecret
 }
